@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>URL</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>get-IP-site</h1>
+      <input type="text" id="password" placeholder="パスワードの設定" />
+      <button onclick="submit()">送信</button>
+      <h2 id="get"></h2>
+      <h2 id="result"></h2>
+      <h2 id="err"></h2>
+    </div>
+    <div class="container">
+      <h1>how to use</h1>
+      <br />
+      <h2>パスワードを設定し送信（重複可能）</h2>
+      <h2>でもなるべく重複しないものが良い</h2>
+      <h2>発行されたURLを相手に送ります</h2>
+      <h2>最後に確認用URLを開いて完了です</h2>
+    </div>
+  </body>
+  <script>
+    let get = document.getElementById("get");
+    let result = document.getElementById("result");
+    let err = document.getElementById("err");
+    function submit() {
+      let password = document.getElementById("password").value;
+      if (password) {
+        const option = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ password: password }),
+        };
+        fetch("/password", option).then((response) => {
+          if (!response.ok) {
+            err.innerHTML = "エラーが発生しました。";
+            return;
+          }
+        });
+        get.innerHTML = "相手に送るURL:" + location.href + "get/" + password;
+        result.innerHTML = "確認用:" + location.href + "result/" + password;
+      } else {
+        err.innerHTML = "パスワードを設定してください。";
+      }
+    }
+  </script>
+  <style>
+    /* ベーススタイル */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center; /* 横方向に中央寄せ */
+      align-items: center; /* 縦方向に中央寄せ */
+      flex-direction: column; /* 縦に並べる */
+      height: 100vh;
+      margin: 0;
+      color: #333;
+      padding: 0 20px;
+      box-sizing: border-box;
+      overflow: auto; /* コンテンツがはみ出してもスクロール可能 */
+    }
+
+    /* コンテナスタイル */
+    .container {
+      text-align: center;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      margin: 20px 0;
+    }
+
+    /* タイトル */
+    h1 {
+      font-size: 1.8em;
+      color: #444;
+      margin-bottom: 10px;
+    }
+
+    /* 入力ボックスとボタン */
+    input[type="text"] {
+      padding: 10px;
+      width: 100%;
+      margin: 10px 0 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1em;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 12px 25px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    /* 結果エリア */
+    h2 {
+      font-size: 0.95em;
+      color: #555;
+      margin: 8px 0;
+      line-height: 1.4;
+    }
+
+    /* エラーメッセージ */
+    #err {
+      color: #e63946;
+      font-weight: bold;
+    }
+
+    /* "how to use" セクションをページの中央に配置 */
+    .container:last-child {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+  </style>
+</html>
