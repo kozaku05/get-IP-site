@@ -26,13 +26,17 @@ app.get("/result/:password", (req, res) => {
     if (err) return res.status(500).send("サーバーエラーが発生しました");
     const json = JSON.parse(data);
     if (json.hasOwnProperty(password)) {
-      res.send(
-        `<body><h1>取得したIPアドレス: ${json[password]}, 設定したパスワード: ${password}</h1></body><style>body{background:black;color:green;}</style>`
-      );
+      if (json[password]) {
+        res.send(
+          `<body><h1>取得したIPアドレス: ${json[password]}, 設定したパスワード: ${password}</h1></body><style>body{background:black;color:green;}</style>`
+        );
+      } else {
+        res.send(
+          "エラー：まだ相手がURLを開いていません。または取得に失敗しています"
+        );
+      }
     } else {
-      res.send(
-        "エラー: 相手がURLを開いていない可能性があります。またはこのURLは存在しません"
-      );
+      res.send("エラー: このURLは存在しません");
     }
   });
 });
